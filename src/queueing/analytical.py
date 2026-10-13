@@ -35,3 +35,21 @@ def performance_measures(lam: float, mu: float, s: int, N: int) -> dict[str, flo
     perf_measures["W"] = W
     perf_measures["Wq"] = W_q
     return perf_measures
+
+def total_cost(lam: float, mu: float, s: int, N: int,
+               c_server: float, c_wait: float, c_loss: float) -> float:
+    """Expected cost per unit time of an M/M/s/N queue."""
+    measures = performance_measures(lam, mu, s, N)
+    Lq = measures["Lq"]
+    P_block = measures["P_block"]
+    cost = (s * c_server) + (Lq * c_wait) + (lam * P_block * c_loss)
+    return cost
+
+def optimal_servers(lam: float, mu: float, N: int,
+                    c_server: float, c_wait: float, c_loss: float) -> tuple[int, dict[int, float]]:
+    """Return (best s, {s: cost}) for s = 1..N."""
+    opt_servers = {}
+    for s in range(1, N+1):
+        opt_servers[s] = total_cost(lam, mu, s, N, c_server, c_wait, c_loss)
+    best_servers = min(opt_servers, key = opt_servers.get)
+    return (best_servers, opt_servers)
