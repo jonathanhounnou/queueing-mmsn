@@ -1,6 +1,6 @@
 import heapq
 from collections import deque
-
+import numpy as np
 
 def simulate_trace(arrivals: list[float], services: list[float],
                    s: int, N: int) -> dict:
@@ -44,3 +44,16 @@ def simulate_trace(arrivals: list[float], services: list[float],
     results["rejected"] = rejected
     results["total_time"] = t_last
     return results
+
+def simulate_mmsn(lam: float, mu: float, s: int, N: int,
+                  n_customers: int, seed: int = 0) -> dict:
+    """Simulate an M/M/s/N queue with random arrivals and service times."""
+    rng = np.random.default_rng(seed)
+    arrivals = rng.exponential(1 / lam, n_customers)
+    arrivals = np.cumsum(arrivals)
+    services = rng.exponential(1 / mu, n_customers)
+    results = simulate_trace(arrivals, services, s, N)
+    estimation = {}
+    estimation["p_est"] = [time / results["total_time"] for time in results["time_in_state"]]
+    estimation["block_est"] = results["rejected"] / n_customers
+    return estimation
