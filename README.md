@@ -21,6 +21,19 @@ and performance measures (blocking probability, L, Lq, W, Wq), with tests.
   the curve a straight line of slope c_server = 20. The optimum is shallow: s = 5
   costs only slightly more than s = 4.
 
+## Validation by simulation
+
+ ![Simulation vs theory](figures/sim_vs_theory.png)
+
+ Discrete-event simulation of an M/M/4/15 queue (lam = 10, mu = 3), 10 runs of
+ 50,000 customers each. Bars show the stationary distribution; error bars are
+ the standard deviation across runs. 
+ 
+ The two distributions agree closely: the largest gap over the 16 states is 0.0014,
+ and the blocking probability is 0.0154 +/- 0.0017 in simulation against 0.0159 in
+ theory, a difference well within the run-to-run variability. This cross-checks the
+ analytical formulas and the simulator against each other.
+
 ## Tests
 
     pip install -e ".[dev]"
@@ -29,4 +42,4 @@ and performance measures (blocking probability, L, Lq, W, Wq), with tests.
 ## Roadmap
 - [x] Analytical module
 - [x] Staffing cost optimization
-- [ ] Discrete-event simulation and validation against theory
+- [x] Discrete-event simulation and validation against theory
